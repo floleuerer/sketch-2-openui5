@@ -1,0 +1,14 @@
+<!--START-->
+<mvc:View displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+<VBox class="sapUiSmallMargin">
+<Button text="Accept" type="Accept" />
+<Switch state="true" />
+<Switch state="true" />
+<Button text="Default" />
+<Button text="Accept" type="Accept" />
+<Input width="250px" class="sapUiSmallMarginBottom" />
+<RadioButton groupName="GroupA" text="Option 2" />
+<Slider value="40" width="15em" class="sapUiSmallMarginBottom" />
+</VBox>
+</mvc:View>
+<!--END-->

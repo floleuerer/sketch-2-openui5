@@ -1,0 +1,14 @@
+<!--START-->
+<mvc:View displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+<VBox class="sapUiSmallMargin">
+<Button text="Default" />
+<Button text="Default" />
+<Slider value="40" width="15em" class="sapUiSmallMarginBottom" />
+<Slider value="40" width="15em" class="sapUiSmallMarginBottom" />
+<Slider value="40" width="15em" class="sapUiSmallMarginBottom" />
+<Button text="Default" />
+<Input width="250px" class="sapUiSmallMarginBottom" />
+<CheckBox text="Option a" selected="true" />
+</VBox>
+</mvc:View>
+<!--END-->

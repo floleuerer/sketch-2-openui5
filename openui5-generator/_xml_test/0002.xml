@@ -1,0 +1,14 @@
+<!--START-->
+<mvc:View displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+<VBox class="sapUiSmallMargin">
+<Button text="Accept" type="Accept" />
+<Switch state="true" />
+<Switch state="true" />
+<CheckBox text="Option a" selected="true" />
+<RadioButton groupName="GroupA" text="Option 2" />
+<Input width="250px" class="sapUiSmallMarginBottom" />
+<CheckBox text="Option b" />
+<Input width="250px" class="sapUiSmallMarginBottom" />
+</VBox>
+</mvc:View>
+<!--END-->

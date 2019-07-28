@@ -37,7 +37,6 @@ def conv_gray(images):
 screenshots_files = get_filelist(screenshot_dir)
 screenshots = conv_gray(load_images(screenshot_dir))
 elements_org = conv_gray(load_images(elements_org_dir))
-#elements_drw = load_images(elements_drw_dir)
 
 elements_list = get_filelist(elements_org_dir)
 elements_drw_list = get_filelist(elements_drw_dir)

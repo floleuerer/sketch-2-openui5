@@ -8,13 +8,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import sys
 
-dirname = os.path.dirname(__file__)
+dirname = os.path.dirname(os.path.realpath(__file__))
 
-num_elements = 8 
+img_dir = '_img_test/'
+page_dir = '_xml_test/'
+openui5_dir = '/Users/florian/projects/openui5/openui5/src/sap.m/test/basicTemplate/webapp/view/'
+
+url = 'http://localhost:8080/test-resources/basicTemplate/webapp/index.html'
+
+num_elements = 8
 start= 0
-samples = 5000
+end = 20
 
-def generate_file():
+wait_for_element = '__button0'
+
+def generate_page():
     tok_start = "<!--START-->\n<mvc:View displayBlock=\"true\" xmlns=\"sap.m\" xmlns:mvc=\"sap.ui.core.mvc\">\n<VBox class=\"sapUiSmallMargin\">"
     tok_end = "</VBox>\n</mvc:View>\n<!--END-->"
 
@@ -41,44 +49,48 @@ def generate_file():
     
     return page
 
-def get_screenshot(filename):
-    options = Options()
-    options.add_argument( "--headless" )
-    driver = webdriver.Firefox( firefox_options=options )
-    driver.set_window_size(600, 600)
-    driver.get('http://localhost:8080/test-resources/basicTemplate/webapp/index.html')
-    timeout = 5
-    try:
-        element_present = EC.presence_of_element_located((By.ID, '__button0'))
-        WebDriverWait(driver, timeout).until(element_present)
-        filename = os.path.join(dirname, filename)
-        driver.save_screenshot(filename)
-    except TimeoutException:
-        print("Timed out waiting for page to load")
-    driver.quit()
 
 
-def save_page(filename):
-    filename = os.path.join(dirname, filename)
-    with open(filename, 'w') as f:
+def save_page(path):
+    with open(path, 'w') as f:
         for item in page:
             f.write("%s\n" % item)
 
-
-for i in range(start,samples):
+i = start
+while i < end:
     print(str(i))
-    page = generate_file()
+    page = generate_page()
 
-    save_page('App.view.xml')
-    save_page('_xml/'+str(i)+'.xml')
-    get_screenshot('_img/'+str(i)+'.png')
+    options = Options()
+    options.add_argument("--headless")
+    driver = webdriver.Firefox(firefox_options=options)
+    driver.set_window_size(600, 600)
+    driver.get(url)
+    timeout = 5
+    save_page(openui5_dir+'App.view.xml')
 
+    try:
+        element_present = EC.presence_of_element_located((By.ID, wait_for_element))
+        WebDriverWait(driver, timeout).until(element_present)
 
+        filename = str(i).zfill(4)
+        img_path = os.path.join(dirname, img_dir+filename+'.png')
+        driver.save_screenshot(img_path)
 
+        page_path = os.path.join(dirname, page_dir+filename+'.xml')
+        save_page(page_path)
+        
+        i += 1
+    except TimeoutException:
+        print("Timed out waiting for page to load")
+    finally:
+        driver.quit()
+
+    
     
 
 
 
 
-
+    
 

@@ -1,0 +1,14 @@
+<!--START-->
+<mvc:View displayBlock="true" xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc">
+<VBox class="sapUiSmallMargin">
+<CheckBox text="Option b" />
+<Switch state="true" />
+<CheckBox text="Option b" />
+<Button text="Default" />
+<Button text="Default" />
+<CheckBox text="Option b" />
+<CheckBox text="Option b" />
+<CheckBox text="Option a" selected="true" />
+</VBox>
+</mvc:View>
+<!--END-->
