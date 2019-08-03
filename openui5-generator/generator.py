@@ -10,21 +10,26 @@ import sys
 
 dirname = os.path.dirname(os.path.realpath(__file__))
 
-img_dir = '_img_test/'
-page_dir = '_xml_test/'
-openui5_dir = '/Users/florian/projects/openui5/openui5/src/sap.m/test/basicTemplate/webapp/view/'
-
-url = 'http://localhost:8080/test-resources/basicTemplate/webapp/index.html'
-
-num_elements = 8
-start= 0
-end = 20
-
+img_dir = '_img/'
+page_dir = '_xml/'
 wait_for_element = '__button0'
 
+url = 'http://localhost:8080/test-resources/basicTemplate/webapp/index.html'
+openui5_dir = '/Users/florian/projects/openui5/openui5/src/sap.m/test/basicTemplate/webapp/view/'
+
+max_elements = 8
+start= 0
+end = 10000
+
+
 def generate_page():
-    tok_start = "<!--START-->\n<mvc:View displayBlock=\"true\" xmlns=\"sap.m\" xmlns:mvc=\"sap.ui.core.mvc\">\n<VBox class=\"sapUiSmallMargin\">"
-    tok_end = "</VBox>\n</mvc:View>\n<!--END-->"
+    tok_start = "<!--START-->\n<mvc:View displayBlock=\"true\" xmlns=\"sap.m\" xmlns:mvc=\"sap.ui.core.mvc\">"
+    tok_end = "</mvc:View>\n<!--END-->"
+
+    tok_vbox_start = "<VBox class=\"sapUiSmallMargin\"  width=\"50%\">"
+    tok_vbox_end = "</VBox>"
+    tok_hbox_start = "<HBox class=\"sapUiSmallMargin\">"
+    tok_hbox_end = "</HBox>"
 
     tokens = []
     tokens.append("<RadioButton groupName=\"GroupA\" text=\"Option 1\" selected=\"true\" />")
@@ -39,11 +44,54 @@ def generate_page():
 
     page = []
 
+    vbox = random.randint(1,2)
+    num_elements = random.randint(6,max_elements)
+    max_pre = 3
+    num_pre = random.randint(0,max_pre)
+
+    max_post = 2
+    num_post = random.randint(0,max_post)
+
     page.append(tok_start)
 
-    for i in range(num_elements):
-        rnd = random.randrange(len(tokens))
-        page.append(tokens[rnd])
+    if vbox > 1:
+        
+        page.append(tok_vbox_start)
+        for i in range(num_pre):
+            rnd = random.randrange(len(tokens))
+            page.append(tokens[rnd])
+        page.append(tok_vbox_end)
+
+        page.append(tok_hbox_start)
+
+        for i in range(vbox):  
+            num_vbox = random.randint(1, num_elements-num_pre-num_post)
+
+            page.append(tok_vbox_start)
+            for i in range(num_vbox):
+                rnd = random.randrange(len(tokens))
+                page.append(tokens[rnd])
+            page.append(tok_vbox_end)
+        
+        page.append(tok_hbox_end)
+
+        page.append(tok_vbox_start)
+        for i in range(num_post):
+            rnd = random.randrange(len(tokens))
+            page.append(tokens[rnd])
+        page.append(tok_vbox_end)
+        
+        
+        
+
+    else:
+        page.append(tok_vbox_start)
+
+        for i in range(num_elements):
+            rnd = random.randrange(len(tokens))
+            page.append(tokens[rnd])
+
+        page.append(tok_vbox_end)
 
     page.append(tok_end)
     
@@ -59,18 +107,19 @@ def save_page(path):
 i = start
 while i < end:
     print(str(i))
-    page = generate_page()
-
-    options = Options()
-    options.add_argument("--headless")
-    driver = webdriver.Firefox(firefox_options=options)
-    driver.set_window_size(600, 600)
-    driver.get(url)
-    timeout = 5
-    save_page(openui5_dir+'App.view.xml')
 
     try:
+        page = generate_page()
+        save_page(openui5_dir+'App.view.xml')
+
+        options = Options()
+        options.add_argument("--headless")
+        driver = webdriver.Firefox(firefox_options=options)
+        driver.set_window_size(600, 600)
+        timeout = 5
         element_present = EC.presence_of_element_located((By.ID, wait_for_element))
+
+        driver.get(url)
         WebDriverWait(driver, timeout).until(element_present)
 
         filename = str(i).zfill(4)
@@ -79,7 +128,7 @@ while i < end:
 
         page_path = os.path.join(dirname, page_dir+filename+'.xml')
         save_page(page_path)
-        
+
         i += 1
     except TimeoutException:
         print("Timed out waiting for page to load")
